@@ -4,6 +4,7 @@
 #include "json.hpp"
 #include "FusionEKF.h"
 #include "tools.h"
+#include <fstream>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -30,6 +31,15 @@ string hasData(string s) {
 }
 
 int main() {
+  // create log file for RMSE
+  std::ofstream logfile;
+  // logfile.open("../rmse.csv", std::ios::trunc); // overwrite existing file
+  // // write header
+  // logfile << "step" << "," 
+  //         << "estimate_x" << "," << "estimate_y" << ","
+  //         << "rmse_x" << "," << "rmse_y" << ","
+  //         << "rmse_vx" << "," << "rmse_vy" << "\n";
+
   uWS::Hub h;
 
   // Create a Kalman Filter instance
@@ -39,8 +49,9 @@ int main() {
   Tools tools;
   vector<VectorXd> estimations;
   vector<VectorXd> ground_truth;
+  int step = 0;
 
-  h.onMessage([&fusionEKF,&tools,&estimations,&ground_truth]
+  h.onMessage([&fusionEKF,&tools,&estimations,&ground_truth,&logfile,&step]
               (uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
                uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -140,6 +151,14 @@ int main() {
           // std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
 
+          // write to log file:
+          // logfile << step << "," 
+          // << p_x << "," << p_y << ","
+          // << RMSE(0) << "," << RMSE(1) << ","
+          // << RMSE(2) << "," << RMSE(3) << "\n"; // avoid endl for speed
+          // step += 1;
+
+
         }  // end "telemetry" if
 
       } else {
@@ -169,4 +188,5 @@ int main() {
   }
   
   h.run();
+  // logfile.close();
 }
