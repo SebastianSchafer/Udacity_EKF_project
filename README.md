@@ -13,6 +13,10 @@ This implementation of an [EKF](https://en.wikipedia.org/wiki/Extended_Kalman_fi
 
 The RMSE is calculated to provide a measure of accuracy of the EKF and gauge whether the filter was implemented correctly. Using both lidar and radar data, the RMSE is within the suggested limits of 0.11, 0.52 for the errors of the position and velocity components, respectively as shown in the plot below.
 
+
+![rmse](https://github.com/SebastianSchafer/CarND-Extended-Kalman-Filter-Project/blob/master/rmse_plots.png)
+
+
 One can clearly see how the error reduces the longer the vehicle is tracked -- this is caused by a large initial uncertainty which is improved during every predict-update cycle. The evolution of the error depends on the direction of movement of the vehicle, as in this simplified case any acceleration is treated as noise, i.e. is expected to increase the tracking error. This is demonstrated when comparing the errors for dataset 1 & 2, with the latter just parsign the data in reversed order of the former.
 While the combined radar and lidar data yields the best tracking result, using only lidar data results in very little additional error. Using only the radar data however results in a large (~3x) increase of the positional error. The regression in the velocity error is not as significant because the radar measurement actually provides a direct measure of velocity, while lidar itself des not.
-![rmse](https://github.com/SebastianSchafer/CarND-Extended-Kalman-Filter-Project/blob/master/rmse_plots.png)
+
